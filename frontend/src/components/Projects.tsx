@@ -18,7 +18,6 @@ const Projects: React.FC = () => {
       image:
         'c.jpg',
       technologies: ['HTML','JavaScript','Node.js','CSS', 'Express.js', 'MongoDB'],
-      github: '#',
       live: 'https://ajmcars.netlify.app/',
     },
     {
@@ -30,7 +29,6 @@ const Projects: React.FC = () => {
         'r.jpg',
       technologies: ['Node.js', 'Express. js', 'MongoDB','PostMan'],
       github: 'https://github.com/antojoseph2806/room-booking-backend-nodejs',
-      live: 'https://github.com/antojoseph2806/room-booking-backend-nodejs',
     },
     {
       id: 3,
@@ -41,7 +39,6 @@ const Projects: React.FC = () => {
         'p.jpg',
       technologies: ['Python', 'Django', 'SQLite','HTML', 'CSS', 'JavaScript', 'Bootstrap'],
       github: 'https://github.com/antojoseph2806/pneumonia-detection-system',
-      live: 'https://github.com/antojoseph2806/pneumonia-detection-system',
     },
     {
       id: 4,
@@ -51,7 +48,6 @@ const Projects: React.FC = () => {
       image:
         'port.png',
       technologies: ['React. js', ' Tailwind CSS', 'JavaScript','Framer Motion'],
-      github: '#',
       live: 'https://antojoseph.vercel.app/',
     },
     {
@@ -62,7 +58,6 @@ const Projects: React.FC = () => {
       image:
         'quiz.webp',
       technologies: ['HTML5','JavaScript', 'Razorpay', 'Trivia API','CSS'],
-      github: '#',
       live: 'https://quiz-app-beta-roan.vercel.app/',
     },
   ];
