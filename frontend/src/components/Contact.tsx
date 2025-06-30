@@ -9,6 +9,7 @@ import {
   Clock,
   Globe
 } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const Contact: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -74,6 +75,14 @@ const Contact: React.FC = () => {
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
     };
 
+    Swal.fire({
+      title: 'Sending...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
     try {
       const res = await fetch('https://antojoseph.onrender.com/api/contact', {
         method: 'POST',
@@ -81,15 +90,32 @@ const Contact: React.FC = () => {
         body: JSON.stringify(formData)
       });
 
+      Swal.close();
+
       if (res.ok) {
-        alert('Message sent successfully!');
+        Swal.fire({
+          icon: 'success',
+          title: 'Message Sent!',
+          text: 'Thank you for reaching out.',
+          timer: 3000,
+          showConfirmButton: false
+        });
         form.reset();
       } else {
-        alert('Failed to send message.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops!',
+          text: 'Failed to send your message. Please try again later.',
+        });
       }
     } catch (error) {
       console.error('Submit error:', error);
-      alert('Server error occurred.');
+      Swal.close();
+      Swal.fire({
+        icon: 'error',
+        title: 'Server Error!',
+        text: 'Something went wrong while sending your message.',
+      });
     }
   };
 
@@ -97,14 +123,10 @@ const Contact: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pt-16 overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div
-          className={`transform transition-all duration-1000 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-          }`}
+          className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
         >
           <div className="text-center mb-16">
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Get In Touch
-            </h1>
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Get In Touch</h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
               I'm always interested in new opportunities and collaborations. Let's discuss how we can work together to bring your ideas to life.
             </p>
@@ -112,11 +134,8 @@ const Contact: React.FC = () => {
           </div>
 
           <div className="max-w-4xl mx-auto">
-            {/* Contact Information */}
             <div
-              className={`transform transition-all duration-1000 delay-200 ${
-                isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-              }`}
+              className={`transform transition-all duration-1000 delay-200 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
             >
               <div className="space-y-8">
                 <div>
@@ -143,7 +162,6 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Social Links */}
                 <div className="text-center mb-12">
                   <h3 className="text-2xl font-bold text-gray-900 mb-6">Follow Me</h3>
                   <div className="flex justify-center flex-wrap gap-4">
@@ -164,9 +182,7 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Form Section */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Availability Card */}
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Availability</h3>
                     <div className="bg-green-50 border border-green-200 rounded-xl p-6">
@@ -180,7 +196,6 @@ const Contact: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Contact Form */}
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Send a Message</h3>
                     <form
@@ -217,11 +232,13 @@ const Contact: React.FC = () => {
                     </form>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
+
         </div>
-      </div>  
+      </div>
     </div>
   );
 };

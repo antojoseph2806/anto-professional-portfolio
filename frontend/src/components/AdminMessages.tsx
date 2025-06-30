@@ -6,6 +6,7 @@ import {
   CalendarClock,
   Trash2,
 } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 interface Message {
   _id: string;
@@ -18,7 +19,6 @@ interface Message {
 const AdminMessages: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,7 +31,11 @@ const AdminMessages: React.FC = () => {
         const data = await response.json();
         setMessages(data);
       } catch (err: any) {
-        setError(err.message || 'An error occurred');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: err.message || 'An error occurred while fetching messages',
+        });
       } finally {
         setLoading(false);
       }
@@ -41,9 +45,20 @@ const AdminMessages: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this message?")) return;
+    const confirm = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this message?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    });
+
+    if (!confirm.isConfirmed) return;
 
     setDeletingId(id);
+
     try {
       const response = await fetch(`https://antojoseph.onrender.com/api/contact/${id}`, {
         method: 'DELETE',
@@ -54,8 +69,20 @@ const AdminMessages: React.FC = () => {
       }
 
       setMessages((prev) => prev.filter((msg) => msg._id !== id));
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Deleted!',
+        text: 'The message has been deleted.',
+        timer: 2000,
+        showConfirmButton: false
+      });
     } catch (err: any) {
-      alert(err.message || 'An error occurred while deleting');
+      Swal.fire({
+        icon: 'error',
+        title: 'Delete Failed',
+        text: err.message || 'An error occurred while deleting the message',
+      });
     } finally {
       setDeletingId(null);
     }
@@ -73,8 +100,6 @@ const AdminMessages: React.FC = () => {
 
         {loading ? (
           <p className="text-gray-600 text-center text-lg animate-pulse">Loading messages...</p>
-        ) : error ? (
-          <p className="text-red-600 text-center text-lg">Error: {error}</p>
         ) : messages.length === 0 ? (
           <p className="text-gray-500 text-center">No messages found.</p>
         ) : (
